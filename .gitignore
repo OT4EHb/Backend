@@ -2,7 +2,4 @@
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/Backend/FileContentIndex
-/.vs/Backend/v17
-*.json
 /.vs
