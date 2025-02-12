@@ -1,10 +1,10 @@
 ﻿CREATE TABLE applications (
   id_app int(10) unsigned NOT NULL AUTO_INCREMENT,
   FIO varchar(150) NOT NULL,
-  tel int(10) NOT NULL,
+  tel bigint(10) NOT NULL,
   email varchar(80) NOT NULL,
   DR DATE NOT NULL,
-  sex int(1) NOT NULL DEFAULT 0,
+  sex int(1) NOT NULL,
   bio varchar(200),
   PRIMARY KEY (id_app)
 ) ENGINE = InnoDB;
