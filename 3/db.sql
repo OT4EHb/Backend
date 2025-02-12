@@ -1,4 +1,4 @@
-CREATE TABLE applications (
+﻿CREATE TABLE applications (
   id_app int(10) unsigned NOT NULL AUTO_INCREMENT,
   FIO varchar(150) NOT NULL,
   tel int(10) NOT NULL,
