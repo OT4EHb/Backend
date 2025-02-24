@@ -14,7 +14,6 @@ if (strlen($_POST['FIO'])>150) {
 } else {
 	setcookie('fio_error', '', strtotime("-1 day"));
 }
-
 setcookie('fio_value', $_POST['FIO'], strtotime('+1 year'));
 
 if (!preg_match('/^[0-9]{10}$/', $_POST['tel'])) {
@@ -23,7 +22,6 @@ if (!preg_match('/^[0-9]{10}$/', $_POST['tel'])) {
 } else {
 	setcookie('tel_error', '', strtotime("-1 day"));
 }
-
 setcookie('tel_value', $_POST['tel'], strtotime('+1 year'));
 
 if (!preg_match('~@~', $_POST['email'])) {
@@ -32,7 +30,6 @@ if (!preg_match('~@~', $_POST['email'])) {
 } else {
 	setcookie('email_error', '', strtotime("-1 day"));
 }
-
 setcookie('email_value', $_POST['email'], strtotime('+1 year'));
 
 $year =(int)substr($_POST['DR'],0,4);
@@ -45,17 +42,16 @@ if($year<1800){
 } else {
 	setcookie('dr_error', '', strtotime("-1 day"));
 }
-
 setcookie('dr_value', $_POST['DR'], strtotime('+1 year'));
 
 if (empty($_POST['lang'])){
 	setcookie('lang_error', 'Выберите хотя бы JavaScript');
+	setcookie('lang_value', '', strtotime('-1 day'));
 	$error = TRUE;
 } else {
 	setcookie('lang_error', '', strtotime("-1 day"));
+	setcookie('lang_value', implode('|', ($_POST['lang'])), strtotime('+1 year'));
 }
-
-setcookie('lang_value', implode('|', ($_POST['lang'])), strtotime('+1 year'));
 
 if (!preg_match('/^[0, 1]$/', $_POST['sex'])){
 	setcookie('sex_error',"Ты как это сделал?");
@@ -63,7 +59,6 @@ if (!preg_match('/^[0, 1]$/', $_POST['sex'])){
 } else {
 	setcookie('sex_error', '', strtotime("-1 day"));
 }
-
 setcookie('sex_value', $_POST['sex'], strtotime('+1 year'));
 
 if (strlen($_POST['bio'])>200){
@@ -72,7 +67,6 @@ if (strlen($_POST['bio'])>200){
 } else {
 	setcookie('bio_error', '', strtotime("-1 day"));
 }
-
 setcookie('bio_value', $_POST['bio'], strtotime('+1 year'));
 
 if ($error) {
@@ -104,34 +98,6 @@ setcookie('save', 'Успешно');
 header('Location: index.php');
 exit();
 }
-
-$errors = array();
-$values = array();
-
-if (!empty($_COOKIE['save'])) {
-    setcookie('save', '', strtotime("-1 day"));
-    setcookie('DBerror', '', strtotime("-1 day"));
-}
-
-$errors['fio'] = empty($_COOKIE['fio_error']) ? '' : $_COOKIE['fio_error'];
-$values['fio'] = empty($_COOKIE['fio_value']) ? '' : $_COOKIE['fio_value'];
-
-$errors['tel'] = empty($_COOKIE['tel_error']) ? '' : $_COOKIE['tel_error'];
-$values['tel'] = empty($_COOKIE['tel_value']) ? '' : $_COOKIE['tel_value'];
-
-$errors['email'] = empty($_COOKIE['email_error']) ? '' : $_COOKIE['email_error'];
-$values['email'] = empty($_COOKIE['email_value']) ? '' : $_COOKIE['email_value'];
-
-$errors['dr'] = empty($_COOKIE['dr_error']) ? '' : $_COOKIE['dr_error'];
-$values['dr'] = empty($_COOKIE['dr_value']) ? '' : $_COOKIE['dr_value'];
-
-$errors['lang'] = empty($_COOKIE['lang_error']) ? '' : $_COOKIE['lang_error'];
-$languages=empty($_COOKIE['lang_value'])?array():explode("|", $_COOKIE['lang_value']);
-
-$errors['bio'] = empty($_COOKIE['bio_error']) ? '' : $_COOKIE['bio_error'];
-$values['bio'] = empty($_COOKIE['bio_value']) ? '' : $_COOKIE['bio_value'];
-
-$values['sex'] = empty($_COOKIE['sex_value']) ? 0 : $_COOKIE['sex_value'];
 
 include("form.php");
 ?>
