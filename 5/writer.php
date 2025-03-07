@@ -90,6 +90,7 @@ try {
 			$stmt=$db->prepare("INSERT INTO app_langs VALUES (?, ?)");
 			$stmt->execute([$_SESSION['numer'],$value]);
 		}
+		unset($_SESSION['numer']);
 	} 
 	else {
 		$stmt=$db->prepare("INSERT INTO applications VALUES (0, ?, ?, ?, ?, ?, ?)");
