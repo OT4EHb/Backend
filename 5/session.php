@@ -19,7 +19,6 @@ function flash(?string $message = null){
         unset($_SESSION['flash']);
     }
 }
-session_save_path(__DIR__.'/../../../sessions');
 session_start();
 if (isset($_SESSION['active']) and (time() - $_SESSION['active'] > 3600*24)) {
     unset($_SESSION['signin']);

@@ -8,6 +8,7 @@ $id_user=$stmt->fetch(PDO::FETCH_NUM)[0];
 $stmt=$db->prepare("SELECT id_app FROM app_users WHERE id_user=?");
 $stmt->execute([$id_user]);
 $apps=$stmt->fetchAll(PDO::FETCH_NUM);
+unset($_SESSION['numer']);
 ?>
 <html lang="ru">
 <head>

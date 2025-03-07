@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         if (password_verify($_POST['pass'], $pass)){
             $_SESSION['signin']=true;
             $_SESSION['active'] = time();
+            $_SESSION['login']=$_POST['login'];
             header('Location: index.php');
 	        exit();
         } 
