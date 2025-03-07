@@ -79,27 +79,16 @@ if ($error) {
  include __DIR__.'/../../../pass.php';
 
 try {
-	if(isset($_GET['numer'])){
-		$stmt=$db->prepare("SELECT id_user FROM users WHERE login=?");
-		$stmt->execute([$_SESSION['login']]);
-		$id_user=$stmt->fetch(PDO::FETCH_NUM)[0];
-		$stmt=$db->prepare("SELECT id_app FROM app_users WHERE id_user=? AND id_app=?");
-		$stmt->execute([$id_user,$_GET['numer']]);
-		$apps=$stmt->fetch(PDO::FETCH_NUM);
-		if (empty($apps)){
-			flash('Не лезь, чужое!');
-			header('Location: index.php');
-			exit();
-		}
+	if(isset($_SESSION['numer'])){
 		$stmt=$db->prepare("UPDATE applications SET FIO=?, tel=?, email=?,
 			DR=?, sex=?, bio=? WHERE id_app=?");
 		$stmt->execute([$_POST['FIO'], $_POST['tel'], $_POST['email'],
-					$_POST['DR'], $_POST['sex'], $_POST['bio'],$_GET['numer']]);
+					$_POST['DR'], $_POST['sex'], $_POST['bio'],$_SESSION['numer']]);
 		$stmt=$db->prepare("DELETE FROM app_langs WHERE id_app=?");
-		$stmt->execute([$_GET['numer']]);
+		$stmt->execute([$_SESSION['numer']]);
 		foreach($_POST['lang'] as $value) {
 			$stmt=$db->prepare("INSERT INTO app_langs VALUES (?, ?)");
-			$stmt->execute([$_GET['numer'],$value]);
+			$stmt->execute([$_SESSION['numer'],$value]);
 		}
 	} 
 	else {

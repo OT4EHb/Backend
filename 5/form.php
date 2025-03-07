@@ -20,11 +20,12 @@ if (isset($_GET['numer'])){
     $apps=$stmt->fetch(PDO::FETCH_NUM);
     if (empty($apps)){
         print('<h2 style="text-align: center;">
-            У вас нет права редактировать эту таблицу, у нас на севере за такое палками бьют!
+            У вас нет права редактировать эту таблицу, у нас на сервере за такое палками бьют!
             </h2>');
         exit();
     }
-    if (empty($errors)){
+    $_SESSION['numer']=$_GET['numer'];
+    if (empty(array_diff($errors, array('')))){
         $stmt=$db->prepare("SELECT * FROM applications WHERE id_app=?");
         $stmt->execute([$apps[0]]);
         $data=$stmt->fetch(PDO::FETCH_NUM);
@@ -55,11 +56,6 @@ function checkLang($num){
     print(in_array($num, $languages) ? 'selected' : '');
 }
 
-if (!empty($_COOKIE['save'])) {
-    setcookie('save', '', strtotime("-1 day"));
-    setcookie('DBerror', '', strtotime("-1 day"));
-}
-
 foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
     setValue($v);
 }
@@ -79,7 +75,7 @@ foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
 </head>
 <body>
     <?php flash();?>
-    <form action="./writer.php<?php print(isset($_GET['numer'])?'?numer='.$_GET['numer']:'');?>" method="post" class="px-2 maxw960">
+    <form action="./writer.php" method="post" class="px-2 maxw960">
         <label class="form-control bg-<?php print($errors['fio']?'danger':'warning')?> border-0 form-label">
             <?php print($errors['fio']?$errors['fio']:'Введите ФИО:')?>
             <input placeholder="Иванов Иван Иванович" name="FIO" required

@@ -11,7 +11,7 @@
     <?php
     for ($i=1;$i<=5;$i++){
         print('
-        <div class="card col-3 my-1">
+        <div class="card col-3 mx-1 my-2">
         <div class="card-header">Лабораторная работа '.$i.'</div>
         <div class="card-body">
             <a href="'.$i.'/" class="btn btn-primary">Приступить к досмотру</a>
