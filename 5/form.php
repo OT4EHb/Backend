@@ -10,6 +10,7 @@ foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
     setErrors($v);
 }
 setErrors('lang');
+unset($_SESSION['numer']);
 if (isset($_GET['numer'])){
     require_once __DIR__.'/../../../pass.php';
     $stmt=$db->prepare("SELECT id_user FROM users WHERE login=?");
