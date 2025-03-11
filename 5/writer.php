@@ -101,11 +101,8 @@ try {
 			$stmt=$db->prepare("INSERT INTO app_langs VALUES (?, ?)");
 			$stmt->execute([$id_app,$value]);
 		}
-		$stmt=$db->prepare("SELECT id_user FROM users WHERE login=?");
-		$stmt->execute([$_SESSION['login']]);
-		$id_user=$stmt->fetch(PDO::FETCH_NUM)[0];
 		$stmt=$db->prepare("INSERT INTO app_users VALUES (?, ?)");
-		$stmt->execute([$id_app, $id_user]);
+		$stmt->execute([$id_app, $_SESSION['login']]);
 	}
 }
 catch(PDOException $e){

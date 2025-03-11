@@ -13,11 +13,8 @@ setErrors('lang');
 unset($_SESSION['numer']);
 if (isset($_GET['numer'])){
     require_once __DIR__.'/../../../pass.php';
-    $stmt=$db->prepare("SELECT id_user FROM users WHERE login=?");
-    $stmt->execute([$_SESSION['login']]);
-    $id_user=$stmt->fetch(PDO::FETCH_NUM)[0];
     $stmt=$db->prepare("SELECT id_app FROM app_users WHERE id_user=? AND id_app=?");
-    $stmt->execute([$id_user,$_GET['numer']]);
+    $stmt->execute([$_SESSION['login'],$_GET['numer']]);
     $apps=$stmt->fetch(PDO::FETCH_NUM);
     if (empty($apps)){
         print('<h2 style="text-align: center;">

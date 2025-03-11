@@ -2,11 +2,8 @@
 require_once __DIR__.'/session.php';
 header('Content-Type: text/html; charset=UTF-8');
 require __DIR__.'/../../../pass.php';
-$stmt=$db->prepare("SELECT id_user FROM users WHERE login=?");
-$stmt->execute([$_SESSION['login']]);
-$id_user=$stmt->fetch(PDO::FETCH_NUM)[0];
 $stmt=$db->prepare("SELECT id_app FROM app_users WHERE id_user=?");
-$stmt->execute([$id_user]);
+$stmt->execute([$_SESSION['login']]);
 $apps=$stmt->fetchAll(PDO::FETCH_NUM);
 ?>
 <html lang="ru">

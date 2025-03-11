@@ -54,7 +54,6 @@ if(array_key_exists('register', $_GET)){
         $stmt=$db->prepare("INSERT INTO users VALUES(0,?,?)");
         $stmt->execute([$login,$hash]);
         session_start();
-        $_SESSION['active']=time();
     }
 }
 ?>

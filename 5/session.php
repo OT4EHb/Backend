@@ -31,9 +31,17 @@ if (str_contains($_SERVER['SCRIPT_NAME'], 'login.php')){
     }
 }
 else {
+    if (!registered()){
+         header('Location: login.php');
+         exit();
+    }
     session_start();
     if (isset($_SESSION['active']) and (time() - $_SESSION['active'] > 3600*24)) {
         unset($_SESSION['signin']);
+    }
+    if (!signedin()){
+        header('Location: login.php');
+        exit();
     }
 }
 ?>
