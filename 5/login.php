@@ -21,13 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
     else { 
         include __DIR__.'/../../../pass.php';
-        $stmt=$db->prepare("SELECT pass FROM users WHERE login=?");
+        $stmt=$db->prepare("SELECT id_user, pass FROM users WHERE login=?");
         $stmt->execute([$_POST['login']]);
-        $pass=$stmt->fetch(PDO::FETCH_NUM)[0];
-        if (password_verify($_POST['pass'], $pass)){
+        $row=$stmt->fetch(PDO::FETCH_NUM);
+        if (password_verify($_POST['pass'], $row[1])){
+            session_start();
+            $_SESSION['active']=time();
+            $_SESSION['login']=$row[0];
             $_SESSION['signin']=true;
-            $_SESSION['active'] = time();
-            $_SESSION['login']=$_POST['login'];
             header('Location: index.php');
 	        exit();
         } 
@@ -50,9 +51,10 @@ if(array_key_exists('register', $_GET)){
         $password=randomPassword();
         $hash=password_hash($password, PASSWORD_DEFAULT);
         flash('Ваш логин: '.$login.'<br>Ваш пароль: '.$password);
-        $_SESSION['login']=$login;
         $stmt=$db->prepare("INSERT INTO users VALUES(0,?,?)");
         $stmt->execute([$login,$hash]);
+        session_start();
+        $_SESSION['active']=time();
     }
 }
 ?>
