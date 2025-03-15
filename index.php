@@ -9,7 +9,7 @@
 <body>
     <div class="d-flex row gx-0 text-center w-75 mx-auto my-3 justify-content-evenly">
     <?php
-    for ($i=1;$i<=5;$i++){
+    for ($i=1;$i<=6;$i++){
         print('
         <div class="card col-3 mx-1 my-2">
         <div class="card-header">Лабораторная работа '.$i.'</div>
