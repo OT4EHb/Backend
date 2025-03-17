@@ -84,7 +84,7 @@ foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
 <body>
     <?php flash();?>
     <form action="./writer.php?<?php 
-        print('?token='.$token.(isAdmin()?'&numer='.$_GET['numer']:''));?>"
+        print('token='.$token.(isAdmin()?'&numer='.$_GET['numer']:''));?>"
         method="post" class="px-2 maxw960">
         <label class="form-control bg-<?php print($errors['fio']?'danger':'warning')?> border-0 form-label">
             <?php print($errors['fio']?$errors['fio']:'Введите ФИО:')?>
