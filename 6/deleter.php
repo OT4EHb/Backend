@@ -1,9 +1,8 @@
 <?php
-require_once __DIR__.'/login.php';
+require_once __DIR__.'/session.php';
 header('Content-Type: text/html; charset=UTF-8');
-if (empty($_GET['numer'])){
-	header('Location: index.php');
-	exit();
+if (empty($_GET['numer']) or empty($_GET['token']) or $_GET['token']!=$_COOKIE['token']){
+	redirect('./');
 }
 try {
 	$stmt=$db->prepare("DELETE FROM app_langs WHERE id_app=?");
@@ -15,10 +14,8 @@ try {
 }
 catch(PDOException $e){
 	flash('Error : ' . $e->getMessage());
-	header('Location: index.php');
-	exit();
+	redirect('./');
 }
 flash('Успешно');
-header('Location: index.php');
-exit();
+redirect('./');
 ?>

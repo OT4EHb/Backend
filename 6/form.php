@@ -1,5 +1,5 @@
 ﻿<?php
-require_once __DIR__.'/login.php';
+require_once __DIR__.'/session.php';
 header('Content-Type: text/html; charset=UTF-8');
 $errors = array();
 function setErrors($name) {
@@ -10,17 +10,32 @@ foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
     setErrors($v);
 }
 setErrors('lang');
-if (!isset($_GET['numer'])){
-    header('Location: index.php');
-    exit();
+if (isAdmin()){
+    if (!isset($_GET['numer'])){
+        redirect('./');
+    }
 }
-if (empty(array_diff($errors, array('')))){
+else{
+    unset($_SESSION['numer']);
+    if (isset($_GET['numer'])){
+        $stmt=$db->prepare("SELECT id_app FROM app_users WHERE id_user=? AND id_app=?");
+        $stmt->execute([$_SESSION['login'],$_GET['numer']]);
+        $apps=$stmt->fetch(PDO::FETCH_NUM);
+        if (empty($apps)){
+            print('<h2 style="text-align: center;">
+                У вас нет права редактировать эту таблицу, у нас на сервере за такое палками бьют!
+                </h2>');
+            exit();
+        }
+        $_SESSION['numer']=$_GET['numer'];
+    }
+}
+if (isset($_GET['numer']) and empty(array_diff($errors, array('')))){
     $stmt=$db->prepare("SELECT * FROM applications WHERE id_app=?");
     $stmt->execute([$_GET['numer']]);
     $data=$stmt->fetch(PDO::FETCH_NUM);
     if(empty($data)){
-        header('Location: index.php');
-        exit();
+        redirect('./');
     }
     foreach(array('fio', 'tel', 'email', 'dr', 'sex') as $k=>$v){
         $_COOKIE[$v.'_value']=$data[$k+1];
@@ -31,7 +46,7 @@ if (empty(array_diff($errors, array('')))){
     $data=$stmt->fetchAll(PDO::FETCH_NUM);
     $langs=array();
     foreach($data as $v){
-    $langs[]=$v[0];
+        $langs[]=$v[0];
     }
     $_COOKIE['lang_value']=implode('|', $langs);
 }
@@ -68,7 +83,9 @@ foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
 </head>
 <body>
     <?php flash();?>
-    <form action="./writer.php?numer=<?php print($_GET['numer']);?>" method="post" class="px-2 maxw960">
+    <form action="./writer.php?<?php 
+        print('?token='.$token.(isAdmin()?'&numer='.$_GET['numer']:''));?>"
+        method="post" class="px-2 maxw960">
         <label class="form-control bg-<?php print($errors['fio']?'danger':'warning')?> border-0 form-label">
             <?php print($errors['fio']?$errors['fio']:'Введите ФИО:')?>
             <input placeholder="Иванов Иван Иванович" name="FIO" required

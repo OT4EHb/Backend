@@ -1,9 +1,10 @@
 ﻿<?php
-require_once __DIR__.'/login.php';
+require_once __DIR__.'/session.php';
 header('Content-Type: text/html; charset=UTF-8');
-if (empty($_GET['numer']) or $_SERVER['REQUEST_METHOD']!='POST'){
-	header('Location: index.php');
-	exit();
+if (isAdmin() and empty($_GET['numer']) or 
+	$_SERVER['REQUEST_METHOD']!='POST' or empty($_GET['token'])
+	or $_GET['token']!=$_COOKIE['token']){
+	redirect('./');
 }
 $error = FALSE;
 if (empty($_POST['FIO'])){
@@ -36,7 +37,7 @@ if (!preg_match('~@~', $_POST['email'])) {
 }
 setcookie('email_value', $_POST['email'], strtotime('+1 year'));
 
-$year =(int)substr($_POST['DR'],0,4);
+$year =intval(substr($_POST['DR'],0,4));
 if($year<1800){
 	setcookie('dr_error', 'Вы долгожитель?');
 	$error = TRUE;
@@ -74,28 +75,39 @@ if (strlen($_POST['bio'])>200){
 setcookie('bio_value', $_POST['bio'], strtotime('+1 year'));
 
 if ($error) {
-	header('Location: form.php'.(isset($_GET['numer'])?'?numer='.$_GET['numer']:''));
-	exit();
+	redirect('form.php'.(isset($_GET['numer'])?'?numer='.$_GET['numer']:''));
 }
 
 try {
-	$stmt=$db->prepare("UPDATE applications SET FIO=?, tel=?, email=?,
-		DR=?, sex=?, bio=? WHERE id_app=?");
-	$stmt->execute([$_POST['FIO'], $_POST['tel'], $_POST['email'],
-		$_POST['DR'], $_POST['sex'], $_POST['bio'],$_GET['numer']]);
-	$stmt=$db->prepare("DELETE FROM app_langs WHERE id_app=?");
-	$stmt->execute([$_GET['numer']]);
-	foreach($_POST['lang'] as $value) {
-		$stmt=$db->prepare("INSERT INTO app_langs VALUES (?, ?)");
-		$stmt->execute([$_GET['numer'],$value]);
+	$numer=(isAdmin()?$_GET['numer']:(isset($_SESSION['numer'])?$_SESSION['numer']:0));
+	if (intval($numer)>0){
+		$stmt=$db->prepare("UPDATE applications SET FIO=?, tel=?, email=?,
+			DR=?, sex=?, bio=? WHERE id_app=?");
+		$stmt->execute([$_POST['FIO'], $_POST['tel'], $_POST['email'],
+			$_POST['DR'], $_POST['sex'], $_POST['bio'],$numer]);
+		$stmt=$db->prepare("DELETE FROM app_langs WHERE id_app=?");
+		$stmt->execute([$numer]);
+		foreach($_POST['lang'] as $value) {
+			$stmt=$db->prepare("INSERT INTO app_langs VALUES (?, ?)");
+			$stmt->execute([$numer,$value]);
+		}
+	} else {
+		$stmt=$db->prepare("INSERT INTO applications VALUES (0, ?, ?, ?, ?, ?, ?)");
+		$stmt->execute([$_POST['FIO'], $_POST['tel'], $_POST['email'],
+					$_POST['DR'], $_POST['sex'], $_POST['bio']]);
+		$id_app=$db->lastInsertId();
+		foreach($_POST['lang'] as $value) {
+			$stmt=$db->prepare("INSERT INTO app_langs VALUES (?, ?)");
+			$stmt->execute([$id_app,$value]);
+		}
+		$stmt=$db->prepare("INSERT INTO app_users VALUES (?, ?)");
+		$stmt->execute([$id_app, $_SESSION['login']]);
 	}
 }
 catch(PDOException $e){
 	flash('Error : ' . $e->getMessage());
-	header('Location: index.php');
-	exit();
+	redirect('./');
 }
 flash('Успешно');
-header('Location: index.php');
-exit();
+redirect('./');
 ?>
