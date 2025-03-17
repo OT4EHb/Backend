@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'\boot.php';
+require_once __DIR__.'/boot.php';
 session_name('Kaneki');
 if (registered()){
     session_start();
