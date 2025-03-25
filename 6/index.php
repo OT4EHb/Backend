@@ -50,9 +50,9 @@ if (isAdmin()){
             </table>
         </div>
         <?php }?>
-        <div class="row col-12 col-md-9 mx-auto my-3 justify-content-evenly">        
+        <div class="row col-12 col-md-10 mx-auto my-3 justify-content-evenly">        
         <?php if (!isAdmin()){?>
-            <div class="card col-2 mx-1 my-2">
+            <div class="card col-6 col-md-2 mx-1 my-2">
                 <div class="card-header">Новая таблица</div>
                 <div class="card-body">
                     <a href="form.php" class="btn btn-primary">Создать</a>
@@ -64,7 +64,7 @@ if (isAdmin()){
         }
         foreach ($apps as $key=>$app){
             print('
-            <div class="card col-5 col-md-3 mx-1 my-2">
+            <div class="card col-6 col-md-3 mx-1 my-2">
                 <div class="card-header">Таблица '.(isAdmin()?$app[0]:$key+1).'</div>
                 <div class="card-body row">'.(isAdmin()?'
                     <p>Владелец: '.(empty($app[1])?'читер какой-то':$app[1]).'</p>':'').'

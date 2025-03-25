@@ -4,7 +4,7 @@ header('Content-Type: text/html; charset=UTF-8');
 $errors = array();
 function setErrors($name) {
     global $errors;
-    $errors[$name] = empty($_COOKIE[$name.'_error']) ? '' : $_COOKIE[$name.'_error'];
+    $errors[$name] = empty($_COOKIE[$name.'_error']) ? '' : strip_tags($_COOKIE[$name.'_error']);
 }
 foreach (array('fio', 'tel', 'email', 'dr', 'sex', 'bio') as $v) {
     setErrors($v);
