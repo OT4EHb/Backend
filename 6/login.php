@@ -1,45 +1,42 @@
 <?php
-require_once __DIR__.'/session.php';
+require_once __DIR__ . '/session.php';
 
-if (signedin()){
+if (signedin()) {
     flash('Вы уже вошли');
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    if (!preg_match('/^user[0-9]+$/', $_POST['login'])){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (!preg_match('/^user[0-9]+$/', $_POST['login'])) {
         flash('Неверный логин или пароль (хи-хи)');
-    }
-    else { 
-        $stmt=$db->prepare("SELECT id_user, pass FROM users WHERE login=?");
+    } else {
+        $stmt = $db->prepare("SELECT id_user, pass FROM users WHERE login=?");
         $stmt->execute([$_POST['login']]);
-        $row=$stmt->fetch(PDO::FETCH_NUM);
-        if (!empty($row)&&password_verify($_POST['pass'], $row[1])){
+        $row = $stmt->fetch(PDO::FETCH_NUM);
+        if (!empty($row) && password_verify($_POST['pass'], $row[1])) {
             session_start();
-            $_SESSION['active']=time();
-            $_SESSION['login']=$row[0];
-            $_SESSION['signin']=true;
+            $_SESSION['active'] = time();
+            $_SESSION['login'] = $row[0];
+            $_SESSION['signin'] = true;
             redirect('./');
-        } 
-        else {
+        } else {
             flash('Неверный логин или пароль (хи-хи)');
         }
     }
 }
 
-if(array_key_exists('register', $_GET)){  
-    if (registered()){
+if (array_key_exists('register', $_GET)) {
+    if (registered()) {
         flash('Вы уже зарегестрированы');
-    } 
-    else {
-        $stmt=$db->prepare("SELECT MAX(id_user) FROM users");
+    } else {
+        $stmt = $db->prepare("SELECT MAX(id_user) FROM users");
         $stmt->execute();
-        $login=$stmt->fetch(PDO::FETCH_NUM)[0];
-        $login='user'.(($login+3)*129-89+pow($login+7,2));
-        $password=randomPassword();
-        $hash=password_hash($password, PASSWORD_DEFAULT);
-        flash('Ваш логин: '.$login.'<br>Ваш пароль: '.$password);
-        $stmt=$db->prepare("INSERT INTO users VALUES(0,?,?)");
-        $stmt->execute([$login,$hash]);
+        $login = $stmt->fetch(PDO::FETCH_NUM)[0];
+        $login = 'user' . (($login + 3) * 129 - 89 + pow($login + 7, 2));
+        $password = randomPassword();
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        flash('Ваш логин: ' . $login . '<br>Ваш пароль: ' . $password);
+        $stmt = $db->prepare("INSERT INTO users VALUES(0,?,?)");
+        $stmt->execute([$login, $hash]);
         session_start();
     }
 }
@@ -60,8 +57,8 @@ if(array_key_exists('register', $_GET)){
 </head>
 <body>
     <?php flash();
-    if (!signedin()){
-    ?>
+    if (!signedin()) {
+        ?>
     <form action="./login.php" method="post" class="px-2 maxw960 position-absolute top-50 translate-middle start-50">
         <label class="form-control bg-warning border-0 form-label">
             Введите логин:
@@ -76,7 +73,7 @@ if(array_key_exists('register', $_GET)){
             <input type="submit" value="Войти" class="btn-success btn m-1 w-50">
         </div>
     </form>
-    <?php 
+    <?php
     }
     ?>
     <a href="admin.php" class="btn-secondary btn m-1">Я админ</a>

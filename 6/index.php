@@ -1,17 +1,17 @@
 <?php
-require_once __DIR__.'/session.php';
+require_once __DIR__ . '/session.php';
 header('Content-Type: text/html; charset=UTF-8');
-$stmt=$db->prepare((isAdmin()?"SELECT a.id_app, login FROM applications a 
+$stmt = $db->prepare((isAdmin() ? "SELECT a.id_app, login FROM applications a 
     LEFT JOIN app_users au ON (a.id_app=au.id_app) LEFT JOIN users u
-    ON (au.id_user=u.id_user)":"SELECT id_app FROM app_users WHERE id_user=?"));
-$stmt->execute((isAdmin()?[]:[$_SESSION['login']]));
-$apps=$stmt->fetchAll(PDO::FETCH_NUM);
-$langs=array();
-if (isAdmin()){    
-    $stmt=$db->prepare("SELECT lang, COUNT(*) FROM app_langs AS a JOIN languages l ON
+    ON (au.id_user=u.id_user)" : "SELECT id_app FROM app_users WHERE id_user=?"));
+$stmt->execute((isAdmin() ? [] : [$_SESSION['login']]));
+$apps = $stmt->fetchAll(PDO::FETCH_NUM);
+$langs = array();
+if (isAdmin()) {
+    $stmt = $db->prepare("SELECT lang, COUNT(*) FROM app_langs AS a JOIN languages l ON
                 (a.id_lang=l.id_lang) GROUP BY lang ORDER BY COUNT(*) DESC");
     $stmt->execute();
-    $langs=$stmt->fetchAll(PDO::FETCH_NUM);
+    $langs = $stmt->fetchAll(PDO::FETCH_NUM);
 }
 ?>
 <html lang="ru">
@@ -27,9 +27,9 @@ if (isAdmin()){
     </style>
 </head>
 <body>
-    <?php flash();?>
+    <?php flash(); ?>
     <div class="container-fluid row align-items-start text-center p-0 m-0">
-        <?php if (isAdmin()){?>
+        <?php if (isAdmin()) { ?>
         <div class="row col-12 col-md-3 my-3">
             <table class="table table-warning table-hover table-bordered border-danger p-0 mx-2">
                 <thead class="table-danger border-warning">
@@ -43,37 +43,36 @@ if (isAdmin()){
                 </thead>
                 <tbody>
                 <?php
-                    foreach ($langs as $lang){
-                        print('<tr><th>'.$lang[0].'</th><th>'.$lang[1]."</th></tr>");
-                    }?>
+                foreach ($langs as $lang) {
+                    print ('<tr><th>' . $lang[0] . '</th><th>' . $lang[1] . "</th></tr>");
+                } ?>
                 </tbody>
             </table>
         </div>
-        <?php }?>
+        <?php } ?>
         <div class="row col-12 col-md-10 mx-auto my-3 justify-content-evenly">        
-        <?php if (!isAdmin()){?>
+        <?php if (!isAdmin()) { ?>
             <div class="card col-6 col-md-2 mx-1 my-2">
                 <div class="card-header">Новая таблица</div>
                 <div class="card-body">
                     <a href="form.php" class="btn btn-primary">Создать</a>
                 </div>
             </div>
-        <?php }
-        else if (empty($apps)){
-            print('<h1 class="text-danger">Всё удалено</h1>');
+        <?php } else if (empty($apps)) {
+            print ('<h1 class="text-danger">Всё удалено</h1>');
         }
-        foreach ($apps as $key=>$app){
-            print('
+        foreach ($apps as $key => $app) {
+            print ('
             <div class="card col-6 col-md-3 mx-1 my-2">
-                <div class="card-header">Таблица '.(isAdmin()?$app[0]:$key+1).'</div>
-                <div class="card-body row">'.(isAdmin()?'
-                    <p>Владелец: '.(empty($app[1])?'читер какой-то':$app[1]).'</p>':'').'
-                    <a href="form.php?numer='.$app[0].'" class="btn btn-primary my-2">Редактировать</a>
-                    '.(isAdmin()?'<a href="deleter.php?numer='.$app[0].'&token='.$token.'"
-                        class="btn btn-'.(empty($app[1])?'danger':'primary').' my-2">Удалить</a>':'').'
+                <div class="card-header">Таблица ' . (isAdmin() ? $app[0] : $key + 1) . '</div>
+                <div class="card-body row">' . (isAdmin() ? '
+                    <p>Владелец: ' . (empty($app[1]) ? 'читер какой-то' : $app[1]) . '</p>' : '') . '
+                    <a href="form.php?numer=' . $app[0] . '" class="btn btn-primary my-2">Редактировать</a>
+                    ' . (isAdmin() ? '<a href="deleter.php?numer=' . $app[0] . '&token=' . $token . '"
+                        class="btn btn-' . (empty($app[1]) ? 'danger' : 'primary') . ' my-2">Удалить</a>' : '') . '
                 </div>
             </div>');
-        }?>
+        } ?>
         </div>
     </div>
 </body>
