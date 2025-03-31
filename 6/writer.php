@@ -51,6 +51,13 @@ if ($year < 1800) {
 }
 setcookie('dr_value', $_POST['DR'], strtotime('+1 year'));
 
+if (!is_array($_POST['lang'])) {
+    $_POST['lang'] = array();
+}
+foreach ($_POST['lang'] as $k => $v) {
+    if (intval($v) < 1 || intval($v) > 11)
+        unset($_POST['lang'][$k]);
+}
 if (empty($_POST['lang'])) {
     setcookie('lang_error', 'Выберите хотя бы JavaScript');
     setcookie('lang_value', '', strtotime('-1 day'));
