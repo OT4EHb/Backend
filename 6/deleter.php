@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . '/session.php';
 header('Content-Type: text/html; charset=UTF-8');
-if (empty($_GET['numer']) or empty($_GET['token']) or $_GET['token'] != $_COOKIE['token']) {
+if (!isAdmin() or empty($_GET['numer']) or empty($_GET['token'])
+    or $_GET['token'] != $_COOKIE['token']) {
     redirect('./');
 }
 try {
