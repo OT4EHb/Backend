@@ -70,8 +70,8 @@ if (isAdmin()) {
                     <p>Фамилия: '.$app[2].'</p>'
                     : '') . '
                     <a href="form.php?numer=' . $app[0] . '" class="link-info my-2">Редактировать</a>
-                    ' . (isAdmin() ? '<form method="post" action="deleter.php?numer=' . $app[0] . '&token=' . $token . '">
-                        <button type="submit" class="btn btn-' . (empty($app[1]) ? 'danger' : 'primary') . ' my-2">Удалить</button>
+                    ' . (isAdmin() ? '<form class="mx-0 my-2" method="post" action="deleter.php?numer=' . $app[0] . '&token=' . $token . '">
+                        <button type="submit" class="w-100 btn btn-' . (empty($app[1]) ? 'danger' : 'primary') . '">Удалить</button>
                         </form>' : '') . '
                 </div>
             </div>');
