@@ -69,9 +69,10 @@ if (isAdmin()) {
                     <p>Владелец: ' . (empty($app[1]) ? 'читер какой-то' : $app[1]) . '</p>
                     <p>Фамилия: '.$app[2].'</p>'
                     : '') . '
-                    <a href="form.php?numer=' . $app[0] . '" class="btn btn-primary my-2">Редактировать</a>
-                    ' . (isAdmin() ? '<a href="deleter.php?numer=' . $app[0] . '&token=' . $token . '"
-                        class="btn btn-' . (empty($app[1]) ? 'danger' : 'primary') . ' my-2">Удалить</a>' : '') . '
+                    <a href="form.php?numer=' . $app[0] . '" class="link-info my-2">Редактировать</a>
+                    ' . (isAdmin() ? '<form method="post" action="deleter.php?numer=' . $app[0] . '&token=' . $token . '">
+                        <button type="submit" class="btn btn-' . (empty($app[1]) ? 'danger' : 'primary') . ' my-2">Удалить</button>
+                        </form>' : '') . '
                 </div>
             </div>');
         } ?>
