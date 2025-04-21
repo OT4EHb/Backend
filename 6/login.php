@@ -8,6 +8,7 @@ if (signedin()) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!preg_match('/^user[0-9]+$/', $_POST['login'])) {
         flash('Неверный логин или пароль (хи-хи)');
+        password_verify($_POST['pass'], "abcdefg");
     } else {
         $stmt = $db->prepare("SELECT id_user, pass FROM users WHERE login=?");
         $stmt->execute([$_POST['login']]);

@@ -61,7 +61,7 @@ function checkAdmin()
         !password_verify($_SERVER['PHP_AUTH_PW'], $admin[1])
     ) {
         header('WWW-Authenticate: Basic realm="Это реалмно"');
-        header('HTTP/1.1 401 Unanthorized');
+        header('HTTP/1.1 401 Unauthorized');
         print ('<h1>Если нажмешь "Отмена" суммарно 1000 раз я всё таки впущу тебя</h1>');
         exit();
     }
@@ -72,4 +72,5 @@ if (isAdmin()) {
 }
 $token = getToken();
 setcookie('token', $token);
+ini_set('display_errors', '0');
 ?>
