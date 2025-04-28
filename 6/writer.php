@@ -126,7 +126,7 @@ try {
         $stmt->execute([$id_app, $_SESSION['login']]);
     }
 } catch (PDOException $e) {
-    flash('Error : ' . $e->getMessage());
+    flash('Error');
     redirect('./');
 }
 flash('Успешно');

@@ -13,7 +13,7 @@ try {
     $stmt = $db->prepare("DELETE FROM applications WHERE id_app=?");
     $stmt->execute([$_GET['numer']]);
 } catch (PDOException $e) {
-    flash('Error : ' . $e->getMessage());
+    flash('Error');
     redirect('./');
 }
 flash('Успешно');
